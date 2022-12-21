@@ -1,21 +1,32 @@
 import React, {createContext, useReducer} from 'react'
 
-// 5. The reducer - this is used to update the state, based on the action
+// The reducer - this is used to update the state, based on the action
 export const AppReducer = (state, action) => {
+	const {type, payload} = action
+
 	let budget = 0
-	switch (action.type) {
+	switch (type) {
+		case 'ADD_BUDGET':
+			const addBudget = parseInt(payload.addBudget) // 10
+			const currentBudget = state.budget
+
+			const budget = currentBudget + addBudget
+
+			return {...state, budget}
+
 		case 'ADD_EXPENSE':
 			let total_budget = 0
+
 			total_budget = state.expenses.reduce((previousExp, currentExp) => {
 				return previousExp + currentExp.cost
 			}, 0)
-			total_budget = total_budget + action.payload.cost
+			total_budget = total_budget + payload.cost
 			action.type = 'DONE'
 			if (total_budget <= state.budget) {
 				total_budget = 0
 				state.expenses.map(currentExp => {
-					if (currentExp.name === action.payload.name) {
-						currentExp.cost = action.payload.cost + currentExp.cost
+					if (currentExp.name === payload.name) {
+						currentExp.cost = payload.cost + currentExp.cost
 					}
 					return currentExp
 				})
@@ -31,11 +42,11 @@ export const AppReducer = (state, action) => {
 		case 'RED_EXPENSE':
 			const red_expenses = state.expenses.map(currentExp => {
 				if (
-					currentExp.name === action.payload.name &&
-					currentExp.cost - action.payload.cost >= 0
+					currentExp.name === payload.name &&
+					currentExp.cost - payload.cost >= 0
 				) {
-					currentExp.cost = currentExp.cost - action.payload.cost
-					budget = state.budget + action.payload.cost
+					currentExp.cost = currentExp.cost - payload.cost
+					budget = state.budget + payload.cost
 				}
 				return currentExp
 			})
@@ -47,7 +58,7 @@ export const AppReducer = (state, action) => {
 		case 'DELETE_EXPENSE':
 			action.type = 'DONE'
 			state.expenses.map(currentExp => {
-				if (currentExp.name === action.payload) {
+				if (currentExp.name === payload) {
 					budget = state.budget + currentExp.cost
 					currentExp.cost = 0
 				}
@@ -60,14 +71,14 @@ export const AppReducer = (state, action) => {
 			}
 		case 'SET_BUDGET':
 			action.type = 'DONE'
-			state.budget = action.payload
+			state.budget = payload
 
 			return {
 				...state,
 			}
 		case 'CHG_CURRENCY':
 			action.type = 'DONE'
-			state.currency = action.payload
+			state.currency = payload
 			return {
 				...state,
 			}
