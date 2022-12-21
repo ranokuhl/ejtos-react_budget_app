@@ -6,14 +6,6 @@ export const AppReducer = (state, action) => {
 
 	let budget = 0
 	switch (type) {
-		case 'ADD_BUDGET':
-			const addBudget = parseInt(payload.addBudget) // 10
-			const currentBudget = state.budget
-
-			const budget = currentBudget + addBudget
-
-			return {...state, budget}
-
 		case 'ADD_EXPENSE':
 			let total_budget = 0
 
