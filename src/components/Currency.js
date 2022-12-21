@@ -1,29 +1,38 @@
-import React, {useState} from 'react'
+import React, {useContext} from 'react'
+import {AppContext} from '../context/AppContext'
 
 const Currency = () => {
-	const [name, setName] = useState()
+	const {dispatch} = useContext(AppContext)
+
+	const currencyEventHandler = e => {
+		const currency = e.target.value
+
+		dispatch({
+			type: 'CHG_CURRENCY',
+			payload: currency,
+		})
+	}
+
 	return (
 		<div className={`alert bg-success text-light`}>
 			<label>Currency</label>
 			<select
 				className={`bg-success text-light border-0`}
-				onChange={event => setName(event.target.value)}
+				onChange={e => currencyEventHandler(e)}
 			>
-                
-				<option value='Dollar' name='dollar'>
+				<option value='$' name='dollar'>
 					$ Dollar
 				</option>
-				<option value='Pound' name='pound'>
+				<option value='£' name='pound'>
 					£ Pound
 				</option>
-				<option value='Euro' name='euro'>
+				<option value='€' name='euro'>
 					€ Euro
 				</option>
-				<option value='Ruppee' name='ruppee'>
+				<option value='₹' name='ruppee'>
 					₹ Ruppee
 				</option>
 			</select>
-			
 		</div>
 	)
 }
