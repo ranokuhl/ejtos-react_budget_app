@@ -31,6 +31,35 @@ export const AppReducer = (state, action) => {
 					...state,
 				}
 			}
+		case 'DECREASE_EXPENSE':
+			let total_budget_decrease = 0
+
+			total_budget_decrease = state.expenses.reduce(
+				(previousExp, currentExp) => {
+					return previousExp + currentExp.cost
+				},
+				0
+			)
+
+			total_budget_decrease = total_budget_decrease + payload.cost
+			action.type = 'DONE'
+			if (total_budget_decrease <= state.budget) {
+				total_budget_decrease = 0
+				state.expenses.map(currentExp => {
+					if (currentExp.name === payload.name) {
+						currentExp.cost = payload.cost + currentExp.cost
+					}
+					return currentExp
+				})
+				return {
+					...state,
+				}
+			} else {
+				alert('Cannot increase the allocation! Out of funds')
+				return {
+					...state,
+				}
+			}
 		case 'RED_EXPENSE':
 			const red_expenses = state.expenses.map(currentExp => {
 				if (
